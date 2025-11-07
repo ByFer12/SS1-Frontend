@@ -73,7 +73,7 @@ export default function Login() {
       >
         <Heading color="yellow.300">Iniciar Sesión</Heading>
         <Input
-          placeholder="Correo electrónico"
+          placeholder="Correo electrónico porfavor"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
