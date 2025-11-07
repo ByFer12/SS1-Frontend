@@ -2,18 +2,24 @@ import {
   Flex,
   Box,
   Button,
-  IconButton,
   Text,
   HStack,
-  VStack,
-  useDisclosure,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  IconButton,
   Drawer,
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
   DrawerBody,
+  VStack,
+  Badge,
+  useDisclosure,
 } from "@chakra-ui/react";
-import { HamburgerIcon } from "@chakra-ui/icons";
+import { HamburgerIcon, ChevronDownIcon, BellIcon } from "@chakra-ui/icons";
+import { FaUserCircle } from "react-icons/fa";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
@@ -22,27 +28,18 @@ export default function Navbar() {
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const NavLinks = (
-    <>
-      <Text as={RouterLink} to="/posts" _hover={{ color: "yellow.300" }}>
-        Noticias
-      </Text>
-      <Text as={RouterLink} to="/events" _hover={{ color: "yellow.300" }}>
-        Alertas
-      </Text>
-      <Text as={RouterLink} to="/help" _hover={{ color: "yellow.300" }}>
-        Ayuda Humanitaria
-      </Text>
-      <Text as={RouterLink} to="/forum" _hover={{ color: "yellow.300" }}>
-        Foros
-      </Text>
-      {user?.role_id === 1 && (
-        <Text as={RouterLink} to="/admin" _hover={{ color: "yellow.300" }}>
-          Administración
-        </Text>
-      )}
-    </>
-  );
+  const notifications = [
+    { id: 1, message: "Nuevo comentario en tu publicación" },
+    { id: 2, message: "Evento programado para mañana" },
+    { id: 3, message: "Tu solicitud de ayuda fue aceptada" },
+    { id: 4, message: "Mensaje de un voluntario" },
+    { id: 5, message: "Nuevo artículo publicado" },
+    { id: 6, message: "Se agregó una actualización de sistema" },
+    { id: 7, message: "Tu publicación recibió 5 likes" },
+    { id: 8, message: "Nuevo usuario registrado" },
+    { id: 9, message: "Tu perfil fue actualizado correctamente" },
+    { id: 10, message: "Recordatorio de verificación de correo" },
+  ];
 
   return (
     <Flex
@@ -51,14 +48,12 @@ export default function Navbar() {
       px={{ base: 4, md: 8 }}
       py={3}
       align="center"
-      boxShadow="md"
       justify="space-between"
-      fontFamily="'Poppins', sans-serif"
       position="sticky"
       top="0"
       zIndex="1000"
     >
-      {/* Logo con estilo artístico */}
+      {/* Logo */}
       <Text
         as={RouterLink}
         to="/"
@@ -66,8 +61,6 @@ export default function Navbar() {
         fontSize={{ base: "xl", md: "2xl" }}
         bgGradient="linear(to-r, teal.300, yellow.200)"
         bgClip="text"
-        fontFamily="'Orbitron', sans-serif"
-        letterSpacing="wide"
         _hover={{
           textDecoration: "none",
           bgGradient: "linear(to-r, yellow.200, teal.200)",
@@ -77,39 +70,191 @@ export default function Navbar() {
       </Text>
 
       {/* Links escritorio */}
-      <HStack
-        spacing={6}
-        display={{ base: "none", md: "flex" }}
-        fontWeight="medium"
-        fontFamily="'Poppins', sans-serif"
-      >
-        {NavLinks}
+      <HStack spacing={6} display={{ base: "none", md: "flex" }}>
+        {/* Menú Posts */}
+        <Menu>
+          <MenuButton
+            as={Button}
+            rightIcon={<ChevronDownIcon />}
+            variant="ghost"
+            color="yellow.300"
+            _hover={{ bg: "whiteAlpha.200" }}
+          >
+            Posts
+          </MenuButton>
+          <MenuList bg="gray.900" borderColor="teal.700" boxShadow="lg">
+            <MenuItem
+              as={RouterLink}
+               bg="teal.600"
+                    borderBottomWidth="1px"         
+                    borderBottomStyle="solid"      
+                    borderBottomColor="teal.700"
+              to="/posts"
+              _hover={{ bg: "teal.800", color: "yellow.200" }}
+              color="white"
+            >
+              Noticias
+            </MenuItem>
+            {user && (
+              <>
+                <MenuItem
+                  as={RouterLink}
+                  to="/articles"
+                   bg="teal.600"
+                    borderBottomWidth="1px"         
+                    borderBottomStyle="solid"      
+                    borderBottomColor="teal.700"
+                  _hover={{ bg: "teal.800", color: "yellow.200" }}
+                  color="white"
+                >
+                  Artículos
+                </MenuItem>
+                <MenuItem
+                  as={RouterLink}
+                   bg="teal.600"
+                    borderBottomWidth="1px"         
+                    borderBottomStyle="solid"      
+                    borderBottomColor="teal.700"
+                  to="/forum"
+                  _hover={{ bg: "teal.800", color: "yellow.200" }}
+                  color="white"
+                >
+                  Foros
+                </MenuItem>
+              </>
+            )}
+          </MenuList>
+        </Menu>
+
+        {/* Menú Ayuda Humanitaria */}
+        {user && (
+          <Menu>
+            <MenuButton
+              as={Button}
+              rightIcon={<ChevronDownIcon />}
+              variant="ghost"
+              color="yellow.300"
+              _hover={{ bg: "whiteAlpha.200" }}
+            >
+              Ayuda Humanitaria
+            </MenuButton>
+            <MenuList bg="gray.900" borderColor="teal.700" boxShadow="lg">
+              <MenuItem
+                as={RouterLink}
+                to="/help"
+                 bg="teal.600"
+                    borderBottomWidth="1px"         
+                    borderBottomStyle="solid"      
+                    borderBottomColor="teal.700"
+                _hover={{ bg: "teal.800", color: "yellow.200" }}
+                color="white"
+              >
+                Solicitar Ayuda
+              </MenuItem>
+              <MenuItem
+                as={RouterLink}
+                to="/events"
+                 bg="teal.600"
+                    borderBottomWidth="1px"         
+                    borderBottomStyle="solid"      
+                    borderBottomColor="teal.700"
+                _hover={{ bg: "teal.800", color: "yellow.200" }}
+                color="white"
+              >
+                Eventos
+              </MenuItem>
+            </MenuList>
+          </Menu>
+        )}
       </HStack>
 
-      {/* Botones sesión */}
-      <HStack display={{ base: "none", md: "flex" }}>
+      {/* Usuario y notificaciones */}
+      <HStack spacing={4} display={{ base: "none", md: "flex" }}>
         {user ? (
           <>
-            <Text fontWeight="semibold" color="yellow.200">
-              {user.username}
-            </Text>
-            <Button
-              size="sm"
-              variant="outline"
-              borderColor="yellow.300"
-              _hover={{ bg: "yellow.400", color: "gray.900" }}
-              onClick={logout}
-            >
-              Salir
-            </Button>
+            <Menu>
+              <MenuButton
+                as={IconButton}
+                icon={
+                  <Box position="relative">
+                    <BellIcon boxSize={6} color="yellow.200" />
+                    <Badge
+                      colorScheme="red"
+                      borderRadius="full"
+                      position="absolute"
+                      top="-1"
+                      right="-1"
+                      fontSize="0.7em"
+                      px="1.5"
+                    >
+                      {notifications.length}
+                    </Badge>
+                  </Box>
+                }
+                variant="ghost"
+                _hover={{ bg: "whiteAlpha.200" }}
+              />
+              <MenuList
+                bg="gray.900"
+                borderColor="teal.700"
+                boxShadow="lg"
+                maxH="250px"
+                overflowY="auto"
+              >
+                {notifications.map((n) => (
+                  <MenuItem
+                    key={n.id}
+                    bg="teal.600"
+                    borderBottomWidth="1px"         
+                    borderBottomStyle="solid"      
+                    borderBottomColor="teal.700"
+                    _hover={{ bg: "teal.800", color: "yellow.200" }}
+                    color="white"
+                  >
+                    {n.message}
+                  </MenuItem>
+                ))}
+              </MenuList>
+            </Menu>
+
+            {/* 👤 Menú de usuario */}
+            <Menu placement="bottom-end">
+              <MenuButton
+                as={Button}
+                variant="ghost"
+                leftIcon={<FaUserCircle size={22} />}
+                color="yellow.200"
+                _hover={{ bg: "whiteAlpha.200" }}
+              >
+                {user.username}
+              </MenuButton>
+              <MenuList
+                bg="gray.900"
+                borderColor="teal.700"
+                boxShadow="lg"
+                color="white"
+                minW="180px"
+              >
+                <MenuItem
+                  as={RouterLink}
+                  to="/profile"
+                  _hover={{ bg: "teal.800", color: "yellow.200" }}
+                >
+                  Ver perfil
+                </MenuItem>
+                <MenuItem
+                  onClick={logout}
+                  _hover={{ bg: "red.700" }}
+                  color="red.300"
+                >
+                  Cerrar sesión
+                </MenuItem>
+              </MenuList>
+            </Menu>
           </>
         ) : (
           <>
-            <Button
-              size="sm"
-              colorScheme="yellow"
-              onClick={() => navigate("/login")}
-            >
+            <Button size="sm" colorScheme="yellow" onClick={() => navigate("/login")}>
               Iniciar sesión
             </Button>
             <Button
@@ -141,19 +286,33 @@ export default function Navbar() {
           <DrawerCloseButton />
           <DrawerBody mt={10}>
             <VStack align="start" spacing={6}>
-              {NavLinks}
-              <Box pt={4}>
+              <Button as={RouterLink} to="/posts" variant="ghost" color="yellow.300">
+                Noticias
+              </Button>
+              {user && (
+                <>
+                  <Button as={RouterLink} to="/articles" variant="ghost" color="yellow.300">
+                    Artículos
+                  </Button>
+                  <Button as={RouterLink} to="/forum" variant="ghost" color="yellow.300">
+                    Foros
+                  </Button>
+                  <Button as={RouterLink} to="/help" variant="ghost" color="yellow.300">
+                    Ayuda
+                  </Button>
+                  <Button as={RouterLink} to="/events" variant="ghost" color="yellow.300">
+                    Eventos
+                  </Button>
+                </>
+              )}
+              <Box pt={4} w="full">
                 {user ? (
-                  <Button w="full" variant="outline" onClick={logout}>
+                  <Button w="full" variant="outline" colorScheme="red" onClick={logout}>
                     Cerrar sesión
                   </Button>
                 ) : (
                   <>
-                    <Button
-                      w="full"
-                      colorScheme="yellow"
-                      onClick={() => navigate("/login")}
-                    >
+                    <Button w="full" colorScheme="yellow" onClick={() => navigate("/login")}>
                       Iniciar sesión
                     </Button>
                     <Button

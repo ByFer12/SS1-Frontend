@@ -168,9 +168,10 @@ export default function ForumList() {
                 <IconButton
                   aria-label="like"
                   icon={<FaHeart />}
-                  colorScheme="pink"
+                  colorScheme="green"
                   variant="ghost"
                   onClick={() => handleLike(f.id)}
+                  
                 />
                 <Text fontSize="sm" color="whiteAlpha.800">
                   {f.likes}

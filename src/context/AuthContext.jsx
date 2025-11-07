@@ -22,20 +22,22 @@ export const AuthProvider = ({ children }) => {
     fetchUser();
   }, []);
 
-  const login = async (email, password) => {
-    const res = await api.post("/auth/login", { email, password });
-    setUser(res.data.user);
-  };
+const login = async (email, password) => {
+  const res = await api.post("/auth/login", { email, password }, { withCredentials: true });
+  setUser(res.data.user);
+  return res.data.user; // 👈 devuelve el usuario
+};
 
   const register = async (data) => {
     const res = await api.post("/auth/register", data);
     setUser(res.data.user);
   };
 
-  const logout = async () => {
-    await api.post("/auth/logout");
-    setUser(null);
-  };
+const logout = async () => {
+  await api.post("/auth/logout", {}, { withCredentials: true });
+  setUser(null);
+};
+
 
   return (
     <AuthContext.Provider value={{ user, login, register, logout, loading }}>
