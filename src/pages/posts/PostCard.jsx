@@ -12,20 +12,47 @@ import {
 import { FaHeart, FaComment } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
 import PostModalLogin from "./PostModalLogin";
+import { useState, useEffect } from "react";
+import api from "../../api/axios";
 
-export default function PostCard({ post }) {
-  const { user } = useAuth();
+export default function PostCard({ post, refresh }) {
+  const { user, token } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const API_URL = import.meta.env.VITE_API_URL;
+  const [numLikes, setNumLikes] = useState(0);
+  const [comments, setComments] = useState([]);
 
-  const handleLike = () => {
-    if (!user) return onOpen();
-    // TODO: Llamada al backend para registrar el like
+
+  const getLikesCount = async () => {
+    
+    try {
+      const res = await api.get(`/likes/${post.id}/count`);
+      console.log("Número de likes recibido del servidor:", res.data.likeCount );
+      setNumLikes(res.data.likeCount);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const handleCommentClick = () => {
-    if (!user) return onOpen();
-    // TODO: Redirigir a detalle del post con foco en comentarios
+
+const fetchComments = async () => {
+    try {
+      const res = await api.get(`/comments/${post.id}`);
+      console.log("Post cargado:", res.data);
+      console.log("Comentarios cargados:", res.data);
+     setComments(res.data);
+    console.log ("cantidad de comentarios recibidos:", res.data.length );
+    } catch (err) {
+      console.error("Error al cargar comentarios:", err);
+    }
   };
+useEffect(() => {
+  if (post) {
+    getLikesCount(); 
+    fetchComments();
+  }
+}, [post]);
+
 
   return (
     <Box
@@ -35,41 +62,19 @@ export default function PostCard({ post }) {
       shadow="lg"
       _hover={{ shadow: "2xl", transform: "scale(1.02)", transition: "0.2s" }}
     >
-      <Image
-        src={post.image}
-        alt={post.title}
-        objectFit="cover"
-        w="100%"
-        h="180px"
-      />
+      <Image src={post.cover_image_url} alt={post.title} objectFit="cover" w="100%" h="180px" />
 
       <VStack align="start" spacing={2} p={4}>
-        <Badge colorScheme="teal">{post.category?.name}</Badge>
-        <Heading size="md" color="yellow.200">
-          {post.title}
-        </Heading>
-        <Text color="whiteAlpha.800" noOfLines={3}>
-          {post.content}
-        </Text>
+        {post.categories.length > 0 && <Badge colorScheme="teal">{post.categories[0].name}</Badge>}
+        <Heading size="md" color="yellow.200">{post.title}</Heading>
+        <Text color="whiteAlpha.800" noOfLines={3}>{post.summary}</Text>
 
         <HStack spacing={4} pt={2}>
-          <Button
-            size="sm"
-            colorScheme="pink"
-            variant="ghost"
-            leftIcon={<FaHeart />}
-            onClick={handleLike}
-          >
-            {post.likes_count}
+          <Button size="sm" colorScheme="pink" variant="ghost" leftIcon={<FaHeart />} disabled>
+            {numLikes || 0}
           </Button>
-          <Button
-            size="sm"
-            colorScheme="blue"
-            variant="ghost"
-            leftIcon={<FaComment />}
-            onClick={handleCommentClick}
-          >
-            {post.comments_count}
+          <Button size="sm" colorScheme="blue" variant="ghost" leftIcon={<FaComment />}>
+            {comments.length || 0}
           </Button>
         </HStack>
       </VStack>

@@ -125,6 +125,57 @@ export default function Navbar() {
             )}
           </MenuList>
         </Menu>
+{/* Menú Comunidad */}
+{user && (
+  <Menu>
+    <MenuButton
+      as={Button}
+      rightIcon={<ChevronDownIcon />}
+      variant="ghost"
+      color="yellow.300"
+      _hover={{ bg: "whiteAlpha.200" }}
+    >
+      Comunidad
+    </MenuButton>
+    <MenuList bg="gray.900" borderColor="teal.700" boxShadow="lg">
+      <MenuItem
+        as={RouterLink}
+        to="/friends"
+        bg="teal.600"
+        borderBottomWidth="1px"
+        borderBottomStyle="solid"
+        borderBottomColor="teal.700"
+        _hover={{ bg: "teal.800", color: "yellow.200" }}
+        color="white"
+      >
+        Personas que quizás conozcas
+      </MenuItem>
+      <MenuItem
+        as={RouterLink}
+        to="/friends/requests"
+        bg="teal.600"
+        borderBottomWidth="1px"
+        borderBottomStyle="solid"
+        borderBottomColor="teal.700"
+        _hover={{ bg: "teal.800", color: "yellow.200" }}
+        color="white"
+      >
+        Solicitudes de amistad
+      </MenuItem>
+      <MenuItem
+        as={RouterLink}
+        to="/friends/list"
+        bg="teal.600"
+        _hover={{ bg: "teal.800", color: "yellow.200" }}
+        color="white"
+      >
+        Mis amigos
+      </MenuItem>
+    </MenuList>
+  </Menu>
+)}
+
+
 
         {/* Menú Ayuda Humanitaria */}
         {user && (

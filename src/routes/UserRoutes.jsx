@@ -8,6 +8,12 @@ import ForumDetail from "../pages/forum/ForumDetail";
 import EventList from "../pages/events/EventList";
 import NotFound from "../pages/NotFound";
 import EventDetail from "../pages/events/EventDetail";
+import ArticleCreate from "../pages/articles/ArticleCreate";
+import ArticleDetail from "../pages/articles/ArticleDetail";
+import ArticleList from "../pages/articles/ArticleList";
+import FriendSuggestions from "../pages/friends/FriendSuggestions";
+import FriendsList from "../community/FriendsList";
+import FriendRequests from "../community/FriendRequests";
 
 export default function UserRoutes() {
   return (
@@ -47,6 +53,57 @@ export default function UserRoutes() {
         }
       />
 
+       {/* 📰 Artículos */}
+      <Route
+        path="/articles"
+        element={
+          <ProtectedRoute roles={[2]}>
+            <ArticleList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/articles/:id"
+        element={
+          <ProtectedRoute roles={[2]}>
+            <ArticleDetail />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/articles/new"
+        element={
+          <ProtectedRoute roles={[2]}>
+            <ArticleCreate />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+  path="/friends"
+  element={
+    <ProtectedRoute roles={[2]}>
+      <FriendSuggestions />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+        path="/friends/requests"
+        element={
+          <ProtectedRoute roles={[2]}>
+            <FriendRequests />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/friends/list"
+        element={
+          <ProtectedRoute roles={[2]}>
+            <FriendsList />
+          </ProtectedRoute>
+        }
+      />
     <Route path="/events" 
            element={
             <ProtectedRoute roles={[2]}>
