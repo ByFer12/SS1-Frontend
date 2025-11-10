@@ -13,7 +13,8 @@ import {
   useToast,
   Spinner,
 } from "@chakra-ui/react";
-import { FaHeart, FaPlus, FaExclamationTriangle } from "react-icons/fa";
+
+import { FaHeart, FaPlus, FaExclamationTriangle,FaShare,FaCheck } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
@@ -39,6 +40,50 @@ export default function ArticleList() {
     }
   };
 
+
+  const handleShare = async (id, isShared) => {
+  if (!user) return onOpen();
+  try {
+    if (!isShared) {
+      await api.post(`/shares/${id}/share`);
+      toast({
+        title: "Artículo compartido",
+        description: "Tu publicación se ha compartido exitosamente.",
+        status: "success",
+        duration: 2500,
+        position: "top",
+      });
+    } else {
+      await api.delete(`/shares/${id}/unshare`);
+      toast({
+        title: "Compartido eliminado",
+        description: "Ya no estás compartiendo este artículo.",
+        status: "info",
+        duration: 2500,
+        position: "top",
+      });
+    }
+
+    // Actualiza el estado local (inversión del flag)
+    setArticles((prev) =>
+      prev.map((a) =>
+        a.id === id ? { ...a, isShared: !isShared } : a
+      )
+    );
+  } catch (err) {
+    console.error("Error al compartir:", err);
+    toast({
+      title: "Error al compartir",
+      description: "No se pudo realizar la acción.",
+      status: "error",
+      duration: 2500,
+      position: "top",
+    });
+  }
+};
+
+
+
   const handleLike = async (id) => {
     if (!user) return onOpen();
     try {
@@ -53,21 +98,6 @@ export default function ArticleList() {
     }
   };
 
-  const handleReport = async (id) => {
-    if (!user) return onOpen();
-    try {
-      await api.post(`/posts/${id}/report`);
-      toast({
-        title: "Artículo reportado",
-        description: "Gracias por tu reporte, será revisado por un administrador.",
-        status: "info",
-        duration: 3000,
-        position: "top",
-      });
-    } catch (err) {
-      console.error("Error al reportar:", err);
-    }
-  };
 
   useEffect(() => {
     fetchArticles();
@@ -167,13 +197,18 @@ export default function ArticleList() {
               >
                 Leer más
               </Button>
-              <IconButton
-                size="sm"
-                icon={<FaExclamationTriangle />}
-                colorScheme="red"
-                variant="ghost"
-                onClick={() => handleReport(a.id)}
-              />
+                <VStack>
+  <IconButton
+    aria-label="share"
+    icon={a.isShared ? <FaCheck /> : <FaShare />}
+    colorScheme={a.isShared ? "teal" : "yellow"}
+    variant="ghost"
+    onClick={() => handleShare(a.id, a.isShared)}
+  />
+  <Text fontSize="sm">
+    {a.isShared ? "Compartido" : "Compartir"}
+  </Text>
+</VStack>
             </HStack>
           </Box>
         ))}

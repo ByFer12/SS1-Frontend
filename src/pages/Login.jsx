@@ -36,7 +36,7 @@ export default function Login() {
       if (user.role_id === 2) {
         console.log("Usuario común ha iniciado sesión", user );
         console.log("ID del rol:", user.role_id," nombre del rol:", user.role_name);  
-        navigate("/posts"); // home para usuario común
+        navigate("/feed"); // home para usuario común
       } else {
         navigate("/dashboard"); // admin o moderador
       }

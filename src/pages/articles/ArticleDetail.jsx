@@ -141,20 +141,20 @@ const handleReport = async () => {
           {article.author?.full_name || article.author?.username} •{" "}
           {new Date(article.created_at).toLocaleString()}
         </Text>
-
+                <HStack spacing={4} mt={4}>
+          <Button colorScheme="pink" leftIcon={<FaHeart />} onClick={handleLike}>
+            {numLikes} Me gusta
+          </Button>
+          <Button colorScheme="red" variant="outline" onClick={onReportOpen}>
+            Reportar
+        </Button>
+        </HStack>
         <Divider />
         <Text color="whiteAlpha.900" maxW="4xl" textAlign="justify">
           {article.content}
         </Text>
 
-        <HStack spacing={4} mt={4}>
-          <Button colorScheme="pink" leftIcon={<FaHeart />} onClick={handleLike}>
-            {numLikes} Me gusta
-          </Button>
-    <Button colorScheme="red" variant="outline" onClick={onReportOpen}>
-    Reportar
-  </Button>
-        </HStack>
+
       </VStack>
 
       <PostModalLogin isOpen={isOpen} onClose={onClose} />

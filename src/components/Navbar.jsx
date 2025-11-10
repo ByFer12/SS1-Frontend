@@ -19,7 +19,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { HamburgerIcon, ChevronDownIcon, BellIcon } from "@chakra-ui/icons";
-import { FaUserCircle } from "react-icons/fa";
+import { FaHome, FaUserCircle } from "react-icons/fa";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
@@ -53,7 +53,7 @@ export default function Navbar() {
       top="0"
       zIndex="1000"
     >
-      {/* Logo */}
+      
       <Text
         as={RouterLink}
         to="/"
@@ -68,6 +68,19 @@ export default function Navbar() {
       >
         SS1 - Plataforma
       </Text>
+
+
+      {user && (
+        <IconButton
+          as={RouterLink}
+          to="/feed"
+          icon={<FaHome  size={30}/>}
+          marginLeft="7"  
+          variant="ghost"
+          color="yellow.300"
+          _hover={{ bg: "whiteAlpha.200" }}
+        />
+      )}  
 
       {/* Links escritorio */}
       <HStack spacing={6} display={{ base: "none", md: "flex" }}>
@@ -288,15 +301,20 @@ export default function Navbar() {
               >
                 <MenuItem
                   as={RouterLink}
-                  to="/profile"
+                  to="/me"
+                  bg="teal.600"
+                  borderBottomWidth="1px"         
+                  borderBottomStyle="solid"      
+                  borderBottomColor="teal.700"
                   _hover={{ bg: "teal.800", color: "yellow.200" }}
                 >
                   Ver perfil
                 </MenuItem>
                 <MenuItem
                   onClick={logout}
+                  bg="red.300"
                   _hover={{ bg: "red.700" }}
-                  color="red.300"
+                  color="red.100"
                 >
                   Cerrar sesión
                 </MenuItem>

@@ -8,10 +8,14 @@ import {
   Image,
   HStack,
 } from "@chakra-ui/react";
+import { use } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+
 
 export default function Home() {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   return (
     <Flex
@@ -44,14 +48,28 @@ export default function Home() {
             Ver noticias
           </Button>
           <Button
+            colorScheme="teal"
+            variant="solid"
+            size="lg"
+            onClick={() => navigate("/feed")}
+          >
+            Ver actividad de amigos
+          </Button>
+          
+        { user ? null : (
+          <Button
             colorScheme="yellow"
             variant="outline"
             size="lg"
             onClick={() => navigate("/register")}
           >
-            Únete ahora
+            Crear cuenta
           </Button>
+        )}
         </HStack>
+
+
+
       </VStack>
 
       {/* Imagen ilustrativa */}

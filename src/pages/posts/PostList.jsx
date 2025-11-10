@@ -1,3 +1,4 @@
+// src/pages/posts/PostList.jsx
 import { useState, useEffect } from "react";
 import {
   Box,
@@ -8,37 +9,85 @@ import {
   Spinner,
   Container,
   Text,
+  useDisclosure, // Importado
+  useToast, // Importado
 } from "@chakra-ui/react";
 import PostCard from "./PostCard";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext"; // Importado
+import PostModalLogin from "./PostModalLogin"; // Importado
+import api from "../../api/axios"; // Importado
 
 export default function PostList() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const navigate = useNavigate();
 
-  const API_URL = import.meta.env.VITE_API_URL;
+  // Lógica de compartir (usada por PostCard)
+  const handleShare = async (id, isShared) => {
+    try {
+      if (!isShared) {
+        await api.post(`/shares/${id}/share`);
+        toast({
+          title: "Publicación compartida",
+          description: "Tu publicación se ha compartido exitosamente.",
+          status: "success",
+          duration: 2500,
+          position: "top",
+        });
+      } else {
+        await api.delete(`/shares/${id}/unshare`);
+        toast({
+          title: "Compartido eliminado",
+          description: "Ya no estás compartiendo esta publicación.",
+          status: "info",
+          duration: 2500,
+          position: "top",
+        });
+      }
+
+      // Actualiza el estado local
+      setPosts((prev) =>
+        prev.map((p) =>
+          p.id === id ? { ...p, isShared: !isShared } : p
+        )
+      );
+    } catch (err) {
+      console.error("Error al compartir:", err);
+      toast({
+        title: "Error al compartir",
+        description: "No se pudo realizar la acción.",
+        status: "error",
+        duration: 2500,
+        position: "top",
+      });
+    }
+  };
+
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${API_URL}/posts`);
-        console.log("Respuesta recibida del servidor:", response);
-        if (!response.ok) throw new Error("Error al cargar los posts");
-        const data = await response.json();
-        console.log("Posts cargados:", data);
-        setPosts(data);
+        // Usamos la instancia de axios/api
+        const response = await api.get("/posts"); 
+        
+        // Asume que response.data contiene el arreglo de posts
+        setPosts(response.data); 
+
       } catch (error) {
-        console.error(error);
+        console.error("Error al cargar posts:", error);
       } finally {
         setLoading(false);
       }
     };
 
     fetchPosts();
-  }, [API_URL]);
+  }, []); 
 
   const filteredPosts = posts.filter(
     (post) =>
@@ -75,7 +124,12 @@ export default function PostList() {
               cursor="pointer"
               _hover={{ transform: "scale(1.02)", transition: "1s" }}
             >
-              <PostCard post={post} />
+              <PostCard 
+                post={post} 
+                isShared={post.isShared || false} 
+                handleShare={handleShare}         
+                onOpenLoginModal={onOpen}         
+              />
             </Box>
           ))}
         </Grid>
@@ -86,6 +140,9 @@ export default function PostList() {
           </Text>
         )}
       </Container>
+      
+      {/* Modal de Login */}
+      <PostModalLogin isOpen={isOpen} onClose={onClose} />
     </Box>
   );
 }

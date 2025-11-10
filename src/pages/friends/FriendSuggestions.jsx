@@ -18,13 +18,28 @@ export default function FriendSuggestions() {
   const toast = useToast();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [friendRequests, setFriendRequests] = useState({}); // para mostrar estado
+  const [friendRequests, setFriendRequests] = useState({});
 
+  // 🧠 Obtener usuarios comunes (solo los que no son amigos)
   const fetchUsers = async () => {
     try {
       const res = await api.get("/users/commons");
-      const filtered = res.data.filter((u) => u.id !== user.id);
-      setUsers(filtered);
+      const allUsers = res.data.filter((u) => u.id !== user.id);
+
+      // 🔍 Filtrar usuarios que NO sean amigos
+      const filteredUsers = [];
+      for (const u of allUsers) {
+        try {
+          const friendshipRes = await api.get(`/friendships/${u.id}/is-friend`);
+          if (!friendshipRes.data.isFriend) {
+            filteredUsers.push(u);
+          }
+        } catch (err) {
+          console.warn(`Error verificando amistad con ${u.username}:`, err);
+        }
+      }
+
+      setUsers(filteredUsers);
     } catch (err) {
       console.error("Error al obtener usuarios:", err);
       toast({

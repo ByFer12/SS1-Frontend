@@ -14,6 +14,9 @@ import ArticleList from "../pages/articles/ArticleList";
 import FriendSuggestions from "../pages/friends/FriendSuggestions";
 import FriendsList from "../community/FriendsList";
 import FriendRequests from "../community/FriendRequests";
+import FeedList from "../pages/feed/FeedList";
+import UserProfile from "../pages/profile/UserProfile";
+import MyProfile from "../pages/profile/MyProfile";
 
 export default function UserRoutes() {
   return (
@@ -120,6 +123,34 @@ export default function UserRoutes() {
       }
     />
 
+
+    <Route
+  path="/feed"
+  element={
+    <ProtectedRoute roles={[2]}>
+      <FeedList />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/profile/:id"
+  element={
+    <ProtectedRoute roles={[2]}>
+      <UserProfile />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/me"
+  element={
+    <ProtectedRoute roles={[2]}>
+      <MyProfile />
+    </ProtectedRoute>
+  }
+/>
+
     <Route path="*" element={
         <ProtectedRoute roles={[2]}>
         <NotFound />
@@ -127,5 +158,6 @@ export default function UserRoutes() {
         } />
 
     </Routes>
+    
   );
 }

@@ -46,6 +46,7 @@ export default function ForumList() {
   const [likesByPost, setLikesByPost] = useState({});
 
 
+
   // 🟢 Cargar todos los foros desde backend
   const fetchForums = async () => {
     try {
