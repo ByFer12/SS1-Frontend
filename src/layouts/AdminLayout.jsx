@@ -19,8 +19,11 @@ export default function AdminLayout() {
     { label: "Periodistas", path: "/admin/journalists", icon: FaUserTie },
     { label: "Validar Posts", path: "/admin/posts/validate", icon: FaNewspaper },
     { label: "Estadísticas de Periodistas", path: "/admin/journalists/stats", icon: FaBalanceScale },
+    { label: "Crear Publicación", path: "/admin/posts/create", icon: FaNewspaper },
+
     { label: "Medios de Comunicación", path: "/admin/media", icon: FaNewspaper },
     { label: "Mi Perfil", path: "/admin/me", icon: FaUserTie },
+    
   ];
 
   return (

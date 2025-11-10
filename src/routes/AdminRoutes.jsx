@@ -13,6 +13,7 @@ import MediaOutletManagement from "../pages/admin/MediaOutletManagement";
 import MyProfile from "../pages/profile/MyProfile";
 import ReportList from "../pages/admin/ReportList";
 import ReportDetail from "../pages/admin/ReportDetail";
+import PostCreateForm from "../pages/posts/PostCreateForm";
 
 export default function AdminRoutes() {
   return (
@@ -34,6 +35,7 @@ export default function AdminRoutes() {
         <Route path="me" element={<MyProfile />} />
         <Route path="reports" element={<ReportList />} />
         <Route path="reports/:id" element={<ReportDetail />} />
+        <Route path="posts/create" element={<PostCreateForm />} />
 
         <Route path="*" element={<NotFound />} />
       </Route>
