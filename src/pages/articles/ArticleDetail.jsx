@@ -50,7 +50,9 @@ const handleReport = async () => {
   }
 
   try {
-    await api.post(`/posts/${id}/report`, { reason: reportReason });
+    // ✅ Enviar al endpoint correcto con prefijo /reports
+    await api.post(`/reports/${article.id}`, { reason: reportReason });
+
     toast({
       title: "Reporte enviado",
       description: "Gracias por tu colaboración. Nuestro equipo revisará el contenido.",
@@ -58,6 +60,7 @@ const handleReport = async () => {
       duration: 2500,
       position: "top",
     });
+
     setReportReason("");
     onReportClose();
   } catch (err) {
@@ -71,6 +74,7 @@ const handleReport = async () => {
     });
   }
 };
+
 
 
 

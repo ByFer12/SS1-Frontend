@@ -38,7 +38,7 @@ export default function Login() {
         console.log("ID del rol:", user.role_id," nombre del rol:", user.role_name);  
         navigate("/feed"); // home para usuario común
       } else {
-        navigate("/dashboard"); // admin o moderador
+        navigate("/admin"); // admin o moderador
       }
     } catch (err) {
       toast({

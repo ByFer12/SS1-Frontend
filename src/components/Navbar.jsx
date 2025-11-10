@@ -27,6 +27,9 @@ export default function Navbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  if (user && user.role_id === 1) {
+    return null;
+  }
 
   const notifications = [
     { id: 1, message: "Nuevo comentario en tu publicación" },

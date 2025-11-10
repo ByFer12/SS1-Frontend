@@ -13,6 +13,7 @@ const navigate = useNavigate();
     const fetchFeed = async () => {
       try {
         const res = await api.get("/shares/feed");
+        console.log("Feed cargado:", res.data);
         setFeed(res.data);
       } catch (err) {
         console.error("Error al cargar feed:", err);
@@ -48,15 +49,28 @@ const navigate = useNavigate();
         {feed.map((f) => (
           <Box key={`${f.user_id}-${f.post_id}`} bg="whiteAlpha.100" p={5} borderRadius="md">
             <HStack mb={3}>
-              {/* 2. REEMPLAZA Navigate con la función navigate */}
-              <Avatar src={f.sharer.avatar_url} name={f.sharer.full_name} size="sm" onClick={() => navigate(`/profile/${f.sharer.id}`)} />
-              
-              <Text color="yellow.200" _hover={{cursor:"pointer"}} fontWeight="bold" onClick={() => navigate(`/profile/${f.sharer.id}`)}>
-                {f.sharer.full_name || f.sharer.username}
-              </Text>
-              <Text color="whiteAlpha.600" fontSize="sm">
-                compartió esto el {new Date(f.shared_at).toLocaleDateString()}
-              </Text>
+                <Avatar src={f.sharer.avatar_url} name={f.sharer.full_name} size="sm" onClick={() => navigate(`/profile/${f.sharer.id}`)} />
+
+                <Text color="yellow.200" _hover={{cursor:"pointer"}} fontWeight="bold" onClick={() => navigate(`/profile/${f.sharer.id}`)}>
+                    {f.sharer.full_name || f.sharer.username}
+                </Text>
+                {/* MODIFICACIÓN AQUÍ: Distingue el tipo de acción */}
+                <Text color="whiteAlpha.600" fontSize="sm">
+                    {f.sharer.id === f.post.author.id ? 
+                        "publicó esto el" : 
+                        "compartió esto el"
+                    } 
+                    {new Date(f.shared_at).toLocaleDateString()}
+                </Text>
+                <Box 
+                 key={`${f.user_id}-${f.post_id}`} 
+                    bg={f.sharer?.role?.name? "yellow.300" : "green.300"}// Fondo amarillo claro
+                    color="black" // <-- ¡Añade esta línea para que la letra sea negra!
+                    p={1} 
+                    borderRadius="md" 
+                >
+                    {f.sharer?.role?.name? "PERIODISTA" : "AMIGO"}
+                </Box>
             </HStack>
             <Box pl={8}>
               {/* 2. REEMPLAZA Navigate con la función navigate */}

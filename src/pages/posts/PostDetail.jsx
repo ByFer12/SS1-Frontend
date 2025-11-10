@@ -161,7 +161,19 @@ const handleDeleteComment = async (commentId) => {
 
       <Heading mb={4} color="yellow.300">{post.title}</Heading>
       <Text mb={6} fontSize="lg">{post.content}</Text>
-      <Text mb={4} fontSize="sm" _hover={{cursor:"pointer"}} color="whiteAlpha.700"  onClick={() => navigate(`/profile/${post.author.id}`)}>Autor: {post.author.full_name}</Text>
+      <Text 
+    mb={4} 
+    fontSize="xl" 
+    fontWeight="bold" // <--- Negrita
+    color="yellow.200" // <--- Color brillante por defecto
+    _hover={{
+        cursor:"pointer", 
+        color: "yellow.400", // <--- Color aún más brillante al pasar el ratón
+        textDecoration: "underline" // <--- Subrayado para enfatizar el clic
+        }} 
+        onClick={() => navigate(`/profile/${post.author.id}`)}>
+        Autor: {post.author.full_name}
+    </Text>
 
       <Button colorScheme="pink" leftIcon={<FaHeart />} mb={6} onClick={handleLike}>
         {numLikes || 0} Me gusta
